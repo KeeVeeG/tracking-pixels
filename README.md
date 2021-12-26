@@ -13,7 +13,7 @@ Before starting set your SECRET key in environment inside docker-compose.yml fil
 
 # Routes
 
-## POST `/{SECRET}/create`
+### POST `/{SECRET}/create`
 
 Create new tracking pixel
 
@@ -36,7 +36,7 @@ Response:
 
 Insert picture in this link to your email message
 
-## GET `/{SECRET}/pixel/{id}`
+### GET `/{SECRET}/pixel/{id}`
 
 Get pixel victim data
 
@@ -58,10 +58,10 @@ Response:
 }
 ```
 
-## GET `/{SECRET}/users/`
+### GET `/{SECRET}/users/`
 
 Get info about all catched users
 
-## GET `/{SECRET}/pixels/`
+### GET `/{SECRET}/pixels/`
 
 Get info about all created pixels
