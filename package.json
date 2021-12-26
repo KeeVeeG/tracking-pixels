@@ -1,0 +1,26 @@
+{
+  "name": "tracking-pixels",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "migrate": "node-pg-migrate",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeeVeeG/tracking-pixels.git"
+  },
+  "author": "Nikita Abaturov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KeeVeeG/tracking-pixels/issues"
+  },
+  "homepage": "https://github.com/KeeVeeG/tracking-pixels#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "node-pg-migrate": "^6.2.0",
+    "pg": "^8.7.1",
+    "uuid": "^8.3.2"
+  },
+  "type": "module"
+}

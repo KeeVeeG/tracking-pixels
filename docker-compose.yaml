@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+
+  pg:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5432:5432'
+    networks:
+      - default
+
+  migrations:
+    build:
+      context: .
+      target: migration
+    environment:
+      DATABASE_URL: postgres://postgres:password@pg:5432/postgres
+    depends_on:
+      - pg
+    networks:
+      - default
+    command: yarn migrate up
+
+  back:
+    build:
+      context: .
+      target: back
+    environment:
+      DATABASE_URL: postgres://postgres:password@pg:5432/postgres
+      SECRET: 12345
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./src:/src
+    depends_on: 
+      - pg
+      - migrations
+    networks:
+      - default
+    command: yarn start
+
+networks:
+  default:
+    driver: bridge
