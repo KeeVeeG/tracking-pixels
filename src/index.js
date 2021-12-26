@@ -26,7 +26,7 @@ app.post('/:secret/create', async (req, res) => {
     name,
     email
   } = req.body;
-  const id = v4().replace(/-/g, '');;
+  const id = v4().replace(/-/g, '');
   await db.query('INSERT INTO pixels VALUES($1, $2, $3)', [id, name, email]);
   res.status(200).json({
     id,
@@ -34,10 +34,13 @@ app.post('/:secret/create', async (req, res) => {
 });
 
 app.get('/image/:id.png', async (req, res) => {
-  if(!adminIPs.has(ip(req)))
+  if (!adminIPs.has(ip(req)))
     await db.query('UPDATE pixels SET data = $1, watched = $2 WHERE id = $3', [{
-      UserAgent: req.headers['user-agent'],
       IP: ip(req),
+      UserAgent: req.headers['user-agent'],
+      Language: req.headers['accept-language'],
+      OS: req.headers['sec-ch-ua-platform'],
+      isMobile: req.headers['sec-ch-ua-mobile']
     }, new Date(), req.params.id]);
   res.sendFile('/src/pixel.png', {
     root: '.',
