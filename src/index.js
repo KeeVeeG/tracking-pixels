@@ -4,6 +4,7 @@ import {
 import postgres from 'pg';
 import express from 'express';
 
+let adminIPs = new Set()
 const secret = process.env.SECRET;
 const db = new postgres.Client({
   connectionString: process.env.DATABASE_URL,
@@ -13,11 +14,14 @@ await db.connect();
 const app = express();
 app.use(express.json());
 
+const ip = req => req.headers['x-forwarded-for'] || req.socket.remoteAddress
+
 app.post('/:secret/create', async (req, res) => {
   if (req.params.secret != secret) {
     res.status(403).send('Invalid secret key');
     return;
   }
+  adminIPs.add(ip(req))
   const {
     name,
     email
@@ -30,10 +34,11 @@ app.post('/:secret/create', async (req, res) => {
 });
 
 app.get('/image/:id.png', async (req, res) => {
-  await db.query('UPDATE pixels SET data = $1, watched = $2 WHERE id = $3', [{
-    UserAgent: req.headers['user-agent'],
-    IP: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-  }, new Date(), req.params.id]);
+  if(!adminIPs.has(ip(req)))
+    await db.query('UPDATE pixels SET data = $1, watched = $2 WHERE id = $3', [{
+      UserAgent: req.headers['user-agent'],
+      IP: ip(req),
+    }, new Date(), req.params.id]);
   res.sendFile('/src/pixel.png', {
     root: '.',
   });
