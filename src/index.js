@@ -80,7 +80,7 @@ app.get('/:secret/pixels', async (req, res) => {
     return;
   }
   const data = (await db.query("SELECT * from pixels")).rows
-  req.status(200).json(data.map(unwrap))
+  res.status(200).json(data.map(unwrap))
 })
 
 app.listen(3000, () => console.log('"Tracking-Pixels" has been started'));
